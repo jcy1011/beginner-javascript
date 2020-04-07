@@ -13,3 +13,9 @@ function sayHi() {
 }
 
 const add = (a, b) => a + b;
+
+function doctorize(name) {
+  return `Dr. ${name}`;
+}
+
+doctorize('Jon');
