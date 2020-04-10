@@ -17,6 +17,9 @@ myDiv.appendChild(myParagraph);
 myDiv.appendChild(myImage);
 
 document.body.appendChild(myDiv);
+// Note, we have direct access to body tag and don't need to select it
+// but could do following
+// const body = document.querySelector('body');
 
 // oh shoot! we need to add somethint to the top. like a heading!
 const heading = document.createElement('h2');
