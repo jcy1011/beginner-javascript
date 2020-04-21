@@ -1,7 +1,8 @@
 const butts = document.querySelector('.butts');
 
-console.log(butts);
+function handleBuyButton(event) {
+  console.log('You are buying');
+  console.log(event.target);
+}
 
-butts.addEventListener('click', function() {
-  console.log('IT DON GOT CLICKED');
-});
+butts.addEventListener('click', handleBuyButton);
