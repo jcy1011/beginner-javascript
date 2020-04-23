@@ -5,7 +5,7 @@
 const canvas = document.querySelector('#etch-a-sketch'); // the element
 const ctx = canvas.getContext('2d'); // where we draw
 const shakeButton = document.querySelector('.shake');
-const MOVE_AMOUNT = 20; // when something is a true constant ALLCAPS with _
+const MOVE_AMOUNT = 80; // when something is a true constant ALLCAPS with _
 
 // Set up cavnas for drawing
 
@@ -45,7 +45,7 @@ ctx.stroke();
 // }
 // equivalent to... (using object destructuring)
 function draw({ key }) {
-  hue += 1; // increment hue so line changes color
+  hue += 3; // increment hue so line changes color
   ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
   console.log(key);
   ctx.beginPath();
@@ -82,6 +82,25 @@ function handleKey(e) {
 }
 
 // Write clear / shake function
+function clearCanvas() {
+  canvas.classList.add('shake');
+  // Note: at this point the shake button only works first time
+  ctx.clearRect(0, 0, width, height); // clear canvas
+  // Must remove 'shake' class after animation finishes. Use eventListener
+  canvas.addEventListener(
+    'animationend',
+    function() {
+      console.log('Done the shake');
+      canvas.classList.remove('shake');
+    },
+    // this prevents multiple eventlisteners piling up on element
+    // also could use removeEventListener
+    { once: true }
+  );
+}
 
 // Listen for arrow keys
 window.addEventListener('keydown', handleKey);
+
+// Hook clearCanvas function shake button
+shakeButton.addEventListener('click', clearCanvas);
