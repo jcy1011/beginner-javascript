@@ -23,6 +23,7 @@ button {
   cursor:pointer;
 }
 
+/* whenever a button has an attribure of aria-selected style it so*/
 button[aria-selected="true"] {
   background: var(--yellow);
   box-shadow: none;
