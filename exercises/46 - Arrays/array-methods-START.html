@@ -12,14 +12,26 @@
 
 <body>
   <script>
-    const toppings = ['Mushrooms ', 'Tomatoes', 'Eggs', 'Chili', 'Lettuce', 'Avocado', 'Chiles', 'Bacon', 'Pickles', 'Onions', 'Cheese'];
+    const toppings = [
+      'Mushrooms ',
+      'Tomatoes',
+      'Eggs',
+      'Chili',
+      'Lettuce',
+      'Avocado',
+      'Chiles',
+      'Bacon',
+      'Pickles',
+      'Onions',
+      'Cheese',
+    ];
 
     const buns = ['egg', 'wonder', 'brioche'];
 
     const meats = {
       beyond: 10,
       beef: 5,
-      pork: 7
+      pork: 7,
     };
 
     const prices = {
@@ -39,41 +51,100 @@
       { comment: 'I DONT LIKE BURGERS', rating: 1 },
     ];
 
-
     /*
       Static Methods
     */
+    // console.log('it works');
 
     // Array.of();
 
     // Make a function that creates a range from x to y with Array.from();
+    const test = Array.from({ length: 10 }); // gives array of 10 objects
+
+    function createRange(start, end) {
+      // create an array with X spots then fill it with what's returned from callback
+      const range = Array.from({ length: end - start + 1 }, function (item, index) {
+        return index + start;
+      });
+      return range;
+    }
+
+    const myRange = createRange(3, 7);
 
     // Check if the last array you created is really an array with Array.isArray();
+    console.log(Array.isArray(myRange));
+    console.log(typeof myRange);
 
     // Take the meats object and make three arrays with Object.entries(), Object.keys, Object.values()
+    console.log(Object.entries(meats));
+    console.log(Object.keys(meats));
+    console.log(Object.values(meats));
+
+    // Object.entries(meats).forEach(entry => {
+    //   // const key = entry[0];
+    //   // const value = entry[1];
+    //   // following destructuring is equivalent to the above 2 lines
+    //   const [key, value] = entry;
+    //   console.log(key, value);
+    // });
+
+    // You could destructure the above code in the entry. Equivalent to the above.
+    Object.entries(meats).forEach(([key, value]) => {
+      console.log(key, value);
+    });
 
     /*
       Instance Methods
     */
 
     // Display all bun types with " or " - use join()
+    console.log(buns.join(', '));
 
-    // We have a string "hot dogs,hamburgers,sausages,corn" - use split() to turn it into a string
+    // We have a string "hot dogs,hamburgers,sausages,corn" - use split() to turn it into an array
+    console.log('hot dogs,hamburgers,sausages,corn'.split(','));
 
     // take the last item off toppings with pop()
+    console.log(toppings);
+    const last = toppings.pop();
+    console.log(last);
+    console.log(toppings);
     // add it back with push()
+    toppings.push(last);
+    console.log(toppings);
     // take the first item off toppings with shift()
     // add it back in with unshift()
-    // Do the last four,but immutable (with spreads and new variables)
 
+    // Do the last four,but immutable (with spreads and new variables)
+    let toppings2 = toppings.slice(0, -1);
+    console.log(toppings2);
+
+    toppings2 = [...toppings2, toppings[toppings.length - 1]];
+    console.log(toppings2);
+
+    toppings2 = toppings2.slice(1);
+    console.log(toppings2);
+
+    toppings2 = [toppings[0], ...toppings2];
+    console.log(toppings2);
 
     // Make a copy of the toppings array with slice()
+    toppings2 = toppings.slice();
+    console.log(toppings2);
     // Make a copy of the toppings array with a spread
+    toppings2 = [...toppings];
     // take out items 3 to 5 of your new toppings array with splice()
+    toppings2.splice(3, 3);
+    console.log(toppings2);
     // find the index of Avocado with indexOf() / lastIndexOf()
+    const avoIndex = toppings.indexOf('Avocado');
     // Check if hot sauce is in the toppings with includes()
+    const hotSauceHere = toppings.includes('hot sauce');
     // add it if it's not
     // flip those toppings around with reverse()
+    if (!hotSauceHere) {
+      toppings.reverse();
+    }
+    console.log(toppings);
 
     /*
       Callback Methods
@@ -93,7 +164,6 @@
     /*
       Looping Methods (next)
     */
-
   </script>
 </body>
 
