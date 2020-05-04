@@ -12,7 +12,19 @@
 
 <body>
   <script>
-    const toppings = ['Mushrooms ', 'Tomatoes', 'Eggs', 'Chili', 'Lettuce', 'Avocado', 'Chiles', 'Bacon', 'Pickles', 'Onions', 'Cheese'];
+    const toppings = [
+      'Mushrooms ',
+      'Tomatoes',
+      'Eggs',
+      'Chili',
+      'Lettuce',
+      'Avocado',
+      'Chiles',
+      'Bacon',
+      'Pickles',
+      'Onions',
+      'Cheese',
+    ];
 
     const students = [
       {
@@ -67,32 +79,31 @@
         birthday: 'April 22, 1993',
         names: {
           first: 'Keith',
-          last: 'Buckley'
-        }
+          last: 'Buckley',
+        },
       },
       {
         birthday: 'January 3, 1975',
         names: {
           first: 'Larry',
-          last: 'Heep'
-        }
+          last: 'Heep',
+        },
       },
       {
         birthday: 'February 12, 1944',
         names: {
           first: 'Linda',
-          last: 'Bermeer'
-        }
-      }
+          last: 'Bermeer',
+        },
+      },
     ];
-
 
     const buns = ['egg', 'wonder', 'brioche'];
 
     const meats = {
       beyond: 10,
       beef: 5,
-      pork: 7
+      pork: 7,
     };
 
     const prices = {
@@ -124,11 +135,125 @@
       { type: 'pants', price: 123 },
     ];
 
-
     /*
       Looping Methods
     */
 
+    function logTopping(topping, index, array) {
+      // log the topping
+      console.log(topping);
+      // log the previous topping if there is one
+      if (array[index - 1]) {
+        console.log(array[index - 1]);
+      }
+      // log the next topping if there is one
+      if (array[index + 1]) {
+        console.log(array[index + 1]);
+      }
+      // if it's the last item in the array say goodbye
+      if (index === array.length - 1) {
+        console.log('goodbye');
+      }
+      console.log('-------------------');
+    }
+    toppings.forEach(logTopping);
+
+    // Map, Filter, Reduce
+
+    console.clear();
+
+    function addArms(face) {
+      return `👋 ${face} 👋`;
+    }
+
+    const toys = faces.map(addArms);
+    console.log(toys);
+
+    function addLastName(name) {
+      return `${name} Yale`;
+    }
+    function capitalize(word) {
+      return `${word[0].toUpperCase()}${word.slice(1)}`;
+    }
+    const firstNames = ['jon', 'chris', 'brad'];
+    const fullNames = firstNames.map(addLastName).map(capitalize);
+    console.log(fullNames);
+
+    const cleanPeople = people.map(function (person) {
+      // console.log(person);
+      // get birthday
+      // NOTE: if you don't passs anything in new Date() it just returns current date
+      const birthday = new Date(person.birthday).getTime();
+      // use console.dir() to see all methods on Date object
+      // console.dir(birthday);
+      // get age
+      const now = Date.now();
+      const age = Math.floor((now - birthday) / (1000 * 60 * 60 * 24 * 365.25));
+      // console.log(age);
+      // return full name and age in an object
+      return {
+        age,
+        name: `${person.names.first} ${person.names.last}`,
+      };
+    });
+    console.table(cleanPeople);
+
+    const over40 = cleanPeople.filter(person => person.age > 40);
+    console.table(over40);
+
+    // Higher order function
+    // function findById(id) {
+    //   return function isStudent(student) {
+    //     return student.id === id;
+    //   };
+    // }
+
+    function findByProp(prop, value) {
+      return function isStudent(student) {
+        return student[prop] === value;
+      };
+    }
+
+    // const student = students.find(stud => stud.id === '565a');
+    // same as above line but using higher order fucntion
+    // const student = students.find(findById('565a'));
+    const student = students.find(findByProp('id', '565a'));
+    const student2 = students.find(findByProp('first_name', 'Lorry'));
+    console.log(student);
+    console.log(student2);
+
+    // Reduce!
+    console.clear();
+
+    // Below appraoch isn't best because we had to create an external variable
+    // let total = 0;
+    // orderTotals.forEach(singleTotal => (total += singleTotal));
+    // console.log(total);
+
+    function tallyNumbers(tally, currentTotal) {
+      console.log(`The current tally is ${tally}`);
+      console.log(`The current total is ${currentTotal}`);
+      console.log('-------------');
+      // return the current tally plus the amount of this order
+      return tally + currentTotal;
+    }
+
+    const allOrders = orderTotals.reduce(tallyNumbers, 0);
+    console.log(allOrders);
+
+    function inventoryReducer(totals, item) {
+      console.log(`Looping over ${item.type}`);
+      // increment the type by 1
+      totals.shirt = totals.shirt + 1 || 1;
+      // if (totals.shirt) totals.shirt++;
+      // else totals.shirt = 1;
+      // totals.shirt > 0 ? totals.shirt++ : (totals.shirt = 1);
+      // return the totals so the next loop can use it
+      return totals;
+    }
+
+    const inventoryCounts = inventory.reduce(inventoryReducer, {});
+    console.log(inventoryCounts);
   </script>
 </body>
 
