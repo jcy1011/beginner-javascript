@@ -158,7 +158,7 @@
     }
     toppings.forEach(logTopping);
 
-    // Map, Filter, Reduce
+    // Map & Filter -------------------------------------------------
 
     console.clear();
 
@@ -222,7 +222,8 @@
     console.log(student);
     console.log(student2);
 
-    // Reduce!
+    // Reduce! -------------------------------------------------
+
     console.clear();
 
     // Below appraoch isn't best because we had to create an external variable
@@ -244,16 +245,23 @@
     function inventoryReducer(totals, item) {
       console.log(`Looping over ${item.type}`);
       // increment the type by 1
-      totals.shirt = totals.shirt + 1 || 1;
-      // if (totals.shirt) totals.shirt++;
-      // else totals.shirt = 1;
-      // totals.shirt > 0 ? totals.shirt++ : (totals.shirt = 1);
-      // return the totals so the next loop can use it
+      // if you try to add 1 to something that doesn't exist you get NaN
+      // so you must include a conditional to avoid this
+      totals[item.type] = totals[item.type] + 1 || 1;
+      // totals[item.type] ? totals[item.type]++ : (totals[item.type] = 1); // same as above
+      // return the totals (i.e. acc) so the next loop can use it
       return totals;
     }
 
+    // counting instances of something in JS is a common task
+    // inputs: an array of objects
+    // outputs: an object including total instances of each unique property and
+    // their corresponding values
     const inventoryCounts = inventory.reduce(inventoryReducer, {});
     console.log(inventoryCounts);
+
+    const inventoryPrice = inventory.reduce((acc, item) => acc + item.price, 0);
+    console.log(inventoryPrice);
   </script>
 </body>
 
