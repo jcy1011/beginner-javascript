@@ -1,0 +1,11 @@
+console.log('it sdf'); // First, select all elements on the page
+// We're goign to access the user's webcam, dump it into the video element
+// Then take frames of video and put a square around face on canvas class="video"
+// And pixelate face in canvas class="face"
+// This could be done on one canvas but this is flexible if you want to use just one image
+
+const video = document.querySelector('.webcam');
+const canvas = document.querySelector('.video');
+const ctx = canvas.getContext('2d');
+const faceCanvas = document.querySelector('.face');
+const faceCtx = canvas.getContext('2d');

@@ -1,0 +1,32 @@
+// console.log('it sdf');
+// First, select all elements on the page
+// We're goign to access the user's webcam, dump it into the video element
+// Then take frames of video and put a square around face on canvas class="video"
+// And pixelate face in canvas class="face"
+// This could be done on one canvas but this is flexible if you want to use just one image
+const video = document.querySelector('.webcam');
+const canvas = document.querySelector('.video');
+const ctx = canvas.getContext('2d');
+const faceCanvas = document.querySelector('.face');
+const faceCtx = faceCanvas.getContext('2d'); // Make a new face detector
+// FaceDetector is showing up as not defined. Solve by adding window before it
+// It's OK to add window to FaceDetector here
+// FaceDetector doesn't exist in node.js so window won't cause problems
+
+const faceDetector = new window.FaceDetector(); // console.log(video, canvas, faceCanvas, faceDetector);
+// Write a function to populate the user's video
+// This is a special function that returns a Promise
+
+async function populateVideo() {
+  const stream = await navigator.mediaDevices.getUserMedia({
+    video: {
+      width: 1280,
+      height: 720
+    }
+  }); //   console.log(stream);
+  //   put MediaStream in video
+} // console.log(populateVideo);
+// Call on pageload
+
+
+populateVideo();
