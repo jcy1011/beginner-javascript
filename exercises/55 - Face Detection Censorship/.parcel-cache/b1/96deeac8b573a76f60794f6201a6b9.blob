@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Censorship</title>
-  <link rel="stylesheet" href="../../base.css">
-
+  <link rel="stylesheet" href="/base.4ebac448.css">
+  <style><div></div></style>
 </head>
 
 <body>
@@ -24,35 +24,9 @@
     <canvas class="video"></canvas>
     <canvas class="face"></canvas>
   </div>
-  <script src="./pixelated-face-START.js"></script>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-    }
-
-    .wrap {
-      position: relative;
-      min-height: 100vh;
-      display: grid;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .wrap>* {
-      grid-column: 1;
-      grid-row: 1;
-    }
+  <script src="/pixelated-face-START.5a8a7b04.js"></script>
 
 
-    .face {
-      position: absolute;
-    }
-  </style>
 </body>
 
 </html>
