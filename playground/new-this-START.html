@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>New, This, Prototypes and Classes</title>
+    <link rel="stylesheet" href="../base.css">
+</head>
+
+<body>
+    <button class="one">Button 1</button>
+    <button class="two">Button 2</button>
+    <script>
+        const myDate = new Date('August 11, 2025');
+        console.dir(myDate);
+        console.log(myDate.getFullYear());
+
+        // This is a constructor, a function that makes an object
+        function Pizza(toppings = [], customer) {
+            console.log('Making a pizza');
+            console.log(this);
+            // save the toppings that were passed in to this instance of pizza
+            this.toppings = toppings;
+            this.customer = customer;
+            this.id = Math.floor(Math.random() * 16777215).toString(16);
+        }
+
+        const pepperoniPizza = new Pizza(['pepperoni'], 'Wes Bos');
+        const canadianPizza = new Pizza(
+            ['pepperoni', 'mushrooms', 'onion'],
+            'Kait Bos'
+        );
+        console.log(pepperoniPizza);
+        console.log(pepperoniPizza.constructor); // tells us what function made me
+        console.log(pepperoniPizza instanceof Pizza);
+
+        const button1 = document.querySelector('.one');
+        const button2 = document.querySelector('.two');
+
+        function tellMeAboutTheButton() {
+            console.log('outside', this);
+            // Use an arrow function to preserve this from outer function scope
+            setTimeout(() => {
+                console.log('inside', this);
+                this.textContent = 'You Clicked Me';
+            }, 1000);
+        }
+
+        // Note when above handler function runs this = to button1 or button2
+        // this === thing to the left of the dot addEventListener
+        // The tellMeAboutTheButton function is said to be bound button1, button2
+        button1.addEventListener('click', tellMeAboutTheButton);
+        button2.addEventListener('click', tellMeAboutTheButton);
+    </script>
+
+</body>
+
+</html>
