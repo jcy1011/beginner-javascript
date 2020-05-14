@@ -54,18 +54,23 @@ function handleSubmit(e) {
 
 function displayItems() {
   // loop over each item and return a list item for each
-  console.log(items);
+  // console.log(items);
   // shopping-item class is so CSS picks it up
   const html = items
     .map(
       item => `<li class="shopping-item">
-      <input type="checkbox">
+      <input
+        value="${item.id}"
+        type="checkbox"
+        ${item.complete ? 'checked' : ''}>
       <span class="itemName">${item.name}</span>
-      <button aria-label="Remove ${item.name}">&times;</button>
+      <button aria-label="Remove ${item.name}" value="${
+        item.id
+      }">&times;</button>
     </li>`
     )
     .join('');
-  console.log(html);
+  // console.log(html);
   list.innerHTML = html;
 }
 
@@ -85,8 +90,20 @@ function restoreFromLocalStorage() {
   }
 }
 
-function deleteItem(e) {
-  console.log('DELETING ITEM');
+function deleteItem(id) {
+  console.log('DELETING ITEM', id);
+  // update items array without this one
+  items = items.filter(item => item.id !== id);
+  console.log(items);
+  list.dispatchEvent(new CustomEvent('itemsUpdated'));
+}
+
+function markAsComplete(id) {
+  console.log('Marking as complete', id);
+  const itemRef = items.find(item => item.id === id);
+  console.log(itemRef);
+  itemRef.complete = !itemRef.complete;
+  list.dispatchEvent(new CustomEvent('itemsUpdated'));
 }
 
 // we don't use 'click', 'enter', etc on forms bc submit is more flexible
@@ -98,8 +115,19 @@ list.addEventListener('itemsUpdated', displayItems);
 // });
 list.addEventListener('itemsUpdated', mirrorToLocalStorage);
 
+// Event Delegation: we listen for the click on the list <ul> but then delegate
+// the click to the button if that was clicked
 list.addEventListener('click', function(e) {
-  console.log(e.target, e.currentTarget);
+  // e.target is the thing that user actually clicked on
+  // e.currentTarget is the thing that you listened for event on
+  // console.log(e.target, e.currentTarget);
+  const id = parseInt(e.target.value);
+  if (e.target.matches('button')) {
+    deleteItem(id);
+  }
+  if (e.target.matches('input[type="checkbox"]')) {
+    markAsComplete(id);
+  }
 });
 
 restoreFromLocalStorage();
