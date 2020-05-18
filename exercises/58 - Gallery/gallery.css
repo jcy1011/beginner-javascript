@@ -76,6 +76,7 @@
       color: black;
     }
 
+    /* when there's an .open property on parent modalInner get this */
     .modal.open .modalInner {
       transform: translateY(0);
     }
