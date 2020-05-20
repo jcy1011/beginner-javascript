@@ -70,10 +70,11 @@ function Slider(slider) {
   // then you can simply pass a reference to the function
   prevButton.addEventListener('click', () => move('back'));
   nextButton.addEventListener('click', move);
+  slides.addEventListener('keyup', e => {
+    if (e.key === 'ArrowLeft') move('back');
+    if (e.key === 'ArrowRight' || e.key === 'Enter') move();
+  });
 }
 
 const mySlider = Slider(document.querySelector('.slider'));
 const dogSlider = Slider(document.querySelector('.dog-slider'));
-
-// Additional features to consider adding:
-// key bindings: get arrow keys to move slides when user is focused on div
