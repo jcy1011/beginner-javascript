@@ -12,9 +12,8 @@ function Slider(slider) {
   let next;
   // select the elements needed for the slider
   const slides = slider.querySelector('.slides');
-  // doesn't this select the wrong buttons for the dog-slider?
-  const prevButton = document.querySelector('.goToPrev');
-  const nextButton = document.querySelector('.goToNext');
+  const prevButton = slider.querySelector('.goToPrev');
+  const nextButton = slider.querySelector('.goToNext');
   // console.log(prevButton);
   // console.log(nextButton);
 
@@ -46,9 +45,17 @@ function Slider(slider) {
 
     // Use destructuring to switch varibles easily
     if (direction === 'back') {
-      [prev, current, next] = [prev.previousElementSibling, prev, current];
+      [prev, current, next] = [
+        prev.previousElementSibling || slides.lastElementChild, // OR wraps
+        prev,
+        current,
+      ];
     } else {
-      [prev, current, next] = [current, next, next.nextElementSibling];
+      [prev, current, next] = [
+        current,
+        next,
+        next.nextElementSibling || slides.firstElementChild, // OR wraps
+      ];
     }
 
     applyClasses();
@@ -67,3 +74,6 @@ function Slider(slider) {
 
 const mySlider = Slider(document.querySelector('.slider'));
 const dogSlider = Slider(document.querySelector('.dog-slider'));
+
+// Additional features to consider adding:
+// key bindings: get arrow keys to move slides when user is focused on div
