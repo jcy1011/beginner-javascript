@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Async Await</title>
+  <link rel="stylesheet" href="../base.css">
+</head>
+
+<body>
+  <script>
+    function wait(ms = 0) {
+      return new Promise(resolve => {
+        setTimeout(resolve, ms);
+      });
+    }
+
+    function makePizza(toppings = []) {
+      return new Promise(function (resolve, reject) {
+        // reject if people try with pineapple
+        if (toppings.includes('pineapple')) {
+          reject('Seriously? Get out 🍍');
+        }
+        const amountOfTimeToBake = 500 + toppings.length * 200;
+        // wait 1 second for the pizza to cook
+        setTimeout(function () {
+          // when you are ready, you can resolve this promise
+          resolve(`Here is your pizza 🍕 with ${toppings.join(' ')}`);
+        }, amountOfTimeToBake);
+        // if something went wrong, we can reject this promise
+      });
+    }
+
+    async function go() {
+      console.log('Starting');
+      await wait(2000);
+      console.log('running');
+      await wait(2000);
+      console.log('ending');
+    }
+
+    // go();
+
+    // If you want the actual data that comes back from a Promise you must
+    // `await` it. If you just run the function and store it in a variable
+    // that will just store the promise
+    async function makeDinner() {
+      // const pizza1 = await makePizza(['pepperoni']);
+      // console.log(pizza1);
+      // const pizza2 = await makePizza(['mushrooms']);
+      // console.log(pizza2);
+
+      // How would we wait for both pizzas to be done? Since it's likely we
+      // can make several pizzas consurrently
+      const pizzaPromise1 = makePizza(['pepperoni']);
+      const pizzaPromise2 = makePizza(['mushrooms']);
+      // Make one big promise that we can await
+      // Remember, with await it'll log actual data, without it'll log promise
+      const [pep, mush] = await Promise.all([pizzaPromise1, pizzaPromise2]);
+      console.log(pep, mush);
+    }
+
+    makeDinner();
+
+    // // Function declaration
+    // async function fd() { }
+
+    // // Arrow functions
+    // const arrowFn = async () => { };
+
+    // // Callback functions
+    // window.addEventListener('click', async function () { });
+
+    // // Methods
+    // const person = {
+    //   // Method
+    //   async sayHi() { },
+
+    //   // Method shorthand
+    //   async sayHello() { },
+
+    //   // Fucntion property
+    //   sayHey: async () => { },
+    // };
+  </script>
+</body>
+
+</html>

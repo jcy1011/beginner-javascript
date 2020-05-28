@@ -46,6 +46,22 @@
 
     const button = document.querySelector('.go');
 
+    async function animate2(e) {
+      const el = e.currentTarget;
+      el.textContent = 'GO';
+      await wait(200);
+      el.classList.add('circle');
+      await wait(500);
+      el.classList.add('red');
+      await wait(250);
+      el.classList.remove('circle');
+      await wait(500);
+      el.classList.remove('red');
+      el.classList.add('purple');
+      await wait(500);
+      el.classList.add('fadeOut');
+    }
+
     function animate(e) {
       const el = e.currentTarget;
       // 1. Change the text to GO when clicked.
@@ -77,7 +93,7 @@
         });
     }
 
-    button.addEventListener('click', animate);
+    button.addEventListener('click', animate2);
     button.addEventListener('clickXXX', go);
 
     function go(e) {
