@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Event Loop</title>
+  <title>Promise Chain</title>
   <link rel="stylesheet" href="../base.css">
 </head>
 
@@ -38,15 +38,47 @@
   </style>
   <div class="go">Click Me</div>
   <script>
-    function wait(ms = 0) {
-      return new Promise(function (resolve) {
-        setTimeout(resolve, ms);
-      });
-    }
+    const wait = (ms = 0) => new Promise(resolve => setTimeout(resolve, ms));
 
-    wait(2000).then(() => {
+    wait(1000).then(() => {
       console.log('Done!');
     });
+
+    const button = document.querySelector('.go');
+
+    function animate(e) {
+      const el = e.currentTarget;
+      // 1. Change the text to GO when clicked.
+      el.textContent = 'GO';
+      // 2. Make it a circle after 2 seconds
+      wait(200)
+        .then(() => {
+          el.classList.add('circle');
+          return wait(500);
+        })
+        .then(() => {
+          // 3. Make it red after 0.5s
+          el.classList.add('red');
+          return wait(250);
+        })
+        .then(() => {
+          // 4. make it square after 0.25s
+          el.classList.remove('circle');
+          return wait(500);
+        })
+        .then(() => {
+          // 5. make it purple
+          el.classList.remove('red');
+          el.classList.add('purple');
+          return wait(500);
+        })
+        .then(() => {
+          el.classList.add('fadeOut');
+        });
+    }
+
+    button.addEventListener('click', animate);
+    button.addEventListener('clickXXX', go);
 
     function go(e) {
       const el = e.currentTarget;
