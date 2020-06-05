@@ -7,6 +7,21 @@ function wait(ms = 0) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+async function destroyPopup(popup) {
+  popup.classList.remove('open');
+  await wait(1000);
+  // Remove the popup entirely
+  popup.remove();
+  // NOTE the popup below will still get logged, we have access to it even though
+  // it's removed from the DOM but NOT from JavaScript's memory. This is a
+  // potential memorey leak
+  console.log(popup);
+  // Completely destroy all evidence of popup. Clean up memory
+  /* eslint-disable no-param-reassign */
+  popup = null;
+  /* eslint-enable no-param-reassign */
+}
+
 // The options parameter is meant to a placeholder for an object argument
 // It's better to pass an object when you have many options which contains
 // severel optional options
@@ -43,7 +58,22 @@ function ask(options) {
       // TODO: listen for a click on the cancel button
     }
 
-    // Third, listen for the submit event on inputs
+    // Listen for the submit event on inputs
+    popup.addEventListener(
+      'submit',
+      function(e) {
+        e.preventDefault();
+        console.log(e.target);
+        // NOTE: anytime <input> has a name attribute, it will be available as
+        // a property on the form
+        resolve(e.target.input.value);
+        // remove popup from the DOM
+        destroyPopup(popup);
+      },
+      // Remove the eventListener after running it once
+      { once: true }
+    );
+
     // When user submits, resolve data from input
 
     // Insert popup into the DOM
@@ -67,3 +97,12 @@ function ask(options) {
 
 // ask({ title: 'does this work?' });
 // ask({ title: 'does this work?', cancel: true });
+
+function askQuestion(e) {
+  console.log(e);
+}
+
+// Select all buttons that have a question
+const buttons = document.querySelectorAll('[data-question]');
+// console.log(buttons);
+buttons.forEach(button => button.addEventListener('click', askQuestion));
