@@ -15,7 +15,7 @@ async function destroyPopup(popup) {
   // NOTE the popup below will still get logged, we have access to it even though
   // it's removed from the DOM but NOT from JavaScript's memory. This is a
   // potential memorey leak
-  console.log(popup);
+  // console.log(popup);
   // Completely destroy all evidence of popup. Clean up memory
   /* eslint-disable no-param-reassign */
   popup = null;
@@ -55,7 +55,15 @@ function ask(options) {
       // use firstElementChild instead of firstChild to avoid bugs like
       // the firstChild selecting a newline as a node. Don't want that
       popup.firstElementChild.appendChild(skipButton);
-      // TODO: listen for a click on the cancel button
+      // listen for a click on the cancel button
+      skipButton.addEventListener(
+        'click',
+        function() {
+          resolve(null); // null bc that's what prompt returns if you enter nothing
+          destroyPopup(popup);
+        },
+        { once: true }
+      );
     }
 
     // Listen for the submit event on inputs
@@ -63,7 +71,7 @@ function ask(options) {
       'submit',
       function(e) {
         e.preventDefault();
-        console.log(e.target);
+        // console.log(e.target);
         // NOTE: anytime <input> has a name attribute, it will be available as
         // a property on the form
         resolve(e.target.input.value);
@@ -98,11 +106,72 @@ function ask(options) {
 // ask({ title: 'does this work?' });
 // ask({ title: 'does this work?', cancel: true });
 
-function askQuestion(e) {
-  console.log(e);
+async function askQuestion(e) {
+  // console.log(e);
+  const button = e.currentTarget;
+  console.log(button.dataset);
+  const cancel = 'cancel' in button.dataset;
+
+  const answer = await ask({ title: button.dataset.question, cancel });
+  console.log(answer);
 }
 
 // Select all buttons that have a question
 const buttons = document.querySelectorAll('[data-question]');
 // console.log(buttons);
 buttons.forEach(button => button.addEventListener('click', askQuestion));
+
+// ask things in series using popups
+const questions = [
+  { title: 'What is your name?' },
+  { title: 'What is your age?', cancel: true },
+  { title: "What is your dog's name?" },
+];
+
+// Promise.all fires them all off at same time but in this case it results in
+// all the popups appearing at once on top of each other. You can't use
+// Promise.all if you want to fire them off sequentially
+// Promise.all([ask(questions[0]), ask(questions[1]), ask(questions[2])]).then(
+//   answers => {
+//     console.log(answers);
+//   }
+// );
+
+// loop over the array and for each one return a promise (yields an arr of
+// promises)
+// loop over each of the questions, pipe it into ask function (which
+// returns a promise), etc. UI still all pops up all at once. so no go
+// Promise.all(questions.map(ask)).then(data => {
+//   console.log(data);
+// });
+
+// How do we make an async forEach or map function? for...of loop
+// unlike map and forEach, for...of allows you to pause a loop using await
+// inside the loop
+// async function askMany() {
+//   for (const question of questions) {
+//     const answer = await ask(question);
+//     console.log(answer);
+//   }
+// }
+// askMany();
+
+// turn above into a generic utility function
+async function asyncMap(array, callback) {
+  // make an array to store results
+  const results = [];
+  // loop over array
+  for (const item of array) {
+    results.push(await callback(item));
+  }
+  // when finished with loop return results
+  return results;
+}
+
+// only creating this function so we can await. Can't await outside of a function
+async function go() {
+  const answers = await asyncMap(questions, ask);
+  console.log(answers);
+}
+
+go();
