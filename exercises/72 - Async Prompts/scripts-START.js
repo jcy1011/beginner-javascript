@@ -24,7 +24,7 @@ async function destroyPopup(popup) {
 
 // The options parameter is meant to a placeholder for an object argument
 // It's better to pass an object when you have many options which contains
-// severel optional options
+// severel optional options. Options: text content of popup, cancel button exists
 function ask(options) {
   return new Promise(async function(resolve) {
     // First, create a popup with all fields in it
