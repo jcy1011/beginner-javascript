@@ -1,13 +1,11 @@
-// console.log('ksdjhfaljdsnf');
-
-const baseEndpoint = 'http://www.recipepuppy.com/api/';
+const baseEndpoint = 'http://www.recipepuppy.com/api';
 const proxy = `https://cors-anywhere.herokuapp.com/`;
 const form = document.querySelector('form.search');
 const recipesGrid = document.querySelector('.recipes');
 
 async function fetchRecipes(query) {
-  const response = await fetch(`${proxy}${baseEndpoint}?q=${query}`);
-  const data = await response.json();
+  const res = await fetch(`${proxy}${baseEndpoint}?q=${query}`);
+  const data = await res.json();
   return data;
 }
 
@@ -19,7 +17,7 @@ async function handleSubmit(event) {
 }
 
 async function fetchAndDisplay(query) {
-  // disable button in form
+  // turn the form off
   form.submit.disabled = true;
   // submit the search
   const recipes = await fetchRecipes(query);
@@ -30,23 +28,18 @@ async function fetchAndDisplay(query) {
 
 function displayRecipes(recipes) {
   console.log('Creating HTML');
-  console.log(recipes);
   const html = recipes.map(
-    // You can nest template tags as many levels deep as you want
-    // Note the && hack below is the same as a conditional if then, ? :
     recipe => `<div class="recipe">
       <h2>${recipe.title}</h2>
       <p>${recipe.ingredients}</p>
       ${recipe.thumbnail &&
         `<img src="${recipe.thumbnail}" alt="${recipe.title}"/>`}
-      <a href="${recipe.href}">View recipe</a>
+      <a href="${recipe.href}">View Recipe →</a>
     </div>`
   );
-  // join on nothing so there's no comma between elements
   recipesGrid.innerHTML = html.join('');
 }
 
 form.addEventListener('submit', handleSubmit);
-
 // on page load run it with pizza
 fetchAndDisplay('pizza');
