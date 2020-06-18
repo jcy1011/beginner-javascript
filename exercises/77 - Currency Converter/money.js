@@ -1,5 +1,8 @@
+const fromInput = document.querySelector('[name=from_amount]');
 const fromSelect = document.querySelector('[name=from_currency]');
 const toSelect = document.querySelector('[name=to_currency]');
+const toOutput = document.querySelector('.to_amount');
+const form = document.querySelector('.app form');
 const endpoint = 'https://api.exchangeratesapi.io/latest';
 
 // An object to cache our rates. We don't want to request rates every time
@@ -70,8 +73,35 @@ async function convert(amount, from, to) {
     // store rates for next time
     ratesByBase[from] = rates;
   }
-  // convert the amount user passed in
-  const convertedAmount = ratesByBase[from].rates[to];
+  // convert the amount user passed in. Note, must use [] for object lookup
+  // using variables
+  const rate = ratesByBase[from].rates[to];
+  const convertedAmount = rate * amount;
+  console.log(`${amount} ${from} is ${convertedAmount} ${to}`);
+  return convertedAmount;
+}
+
+function formatCurrency(amount, currency) {
+  return Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency,
+  }).format(amount);
+}
+
+async function handleInput(e) {
+  // console.log(e.target);
+  // console.log(e.currentTarget);
+  const rawAmount = await convert(
+    fromInput.value,
+    fromSelect.value,
+    toSelect.value
+  );
+  console.log(`rawAmount: ${rawAmount}`);
+  toOutput.textContent = formatCurrency(rawAmount, toSelect.value);
+  // attempt to format input text not working
+  // fromInput.value = formatCurrency(fromInput.value, fromSelect.value);
+  console.log(`fromInput.value: ${fromInput.value}`);
+  console.log(`fromSelect.value: ${fromSelect.value}`);
 }
 
 // store result in variable so only have to run function once
@@ -79,5 +109,13 @@ const optionsHTML = generateOptions(currencies);
 // console.log(optionsHTML);
 
 // populate the options elements on pageload
+// USD shows as default on pageload
 fromSelect.innerHTML = optionsHTML;
 toSelect.innerHTML = optionsHTML;
+// "Select a currency" shows as default on page load
+// fromSelect.insertAdjacentHTML('beforeend', optionsHTML);
+// toSelect.insertAdjacentHTML('beforeend', optionsHTML);
+
+// We need to listen for 3 inputs: typed in number and both currency selections
+// Listen for an input event on the whole form and that'll cover all 3
+form.addEventListener('input', handleInput);
