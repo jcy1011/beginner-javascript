@@ -149,12 +149,18 @@ export const colors = {
   ivory: '#FFFFF0',
 };
 
-// Wes stole this from StackOverflow. It allows us to alter text color
-// according to background color so it's readable
 export function isDark(colorName) {
   const hex = colors[colorName].substring(1, 7);
   const r = parseInt(hex.substring(0, 2), 16);
   const g = parseInt(hex.substring(2, 4), 16);
   const b = parseInt(hex.substring(4, 6), 16);
   return r * 0.299 + g * 0.587 + b * 0.114 < 120;
+}
+
+export const colorsByLength = Object.keys(colors).sort(
+  (a, b) => a.length - b.length
+);
+
+export function isValidColor(word) {
+  return !!colors[word];
 }
