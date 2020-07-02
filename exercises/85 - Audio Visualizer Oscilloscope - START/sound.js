@@ -1,3 +1,5 @@
+import { hslToRgb } from './utils';
+
 const WIDTH = 1500;
 const HEIGHT = 1500;
 const canvas = document.querySelector('canvas');
@@ -32,6 +34,7 @@ async function getAudio() {
   const timeData = new Uint8Array(bufferLength);
   const frequencyData = new Uint8Array(bufferLength);
   drawTimeData(timeData);
+  drawFrequency(frequencyData);
 }
 
 function drawTimeData(timeData) {
@@ -39,13 +42,14 @@ function drawTimeData(timeData) {
   analyzer.getByteTimeDomainData(timeData);
   // console.log(timeData);
   // now that we have data, make it visual
-  // 1. Clear the canvas
+  // 1. Clear the canvas. This makes fast repainting look like animation
+  ctx.clearRect(0, 0, WIDTH, HEIGHT);
   // 2. Setup some canvas drawing
   ctx.lineWidth = 10;
-  ctx.strokeStyle = '#ffc600';
+  ctx.strokeStyle = '#8A2BE2';
   ctx.beginPath();
   const sliceWidth = WIDTH / bufferLength;
-  console.log(sliceWidth);
+  // console.log(sliceWidth);
   let x = 0;
   timeData.forEach((data, i) => {
     const v = data / 128;
@@ -59,8 +63,34 @@ function drawTimeData(timeData) {
     x += sliceWidth;
   });
 
+  ctx.stroke();
+
   // call itself ASAP. Tell browser to do run it next time it repaints to screen
   requestAnimationFrame(() => drawTimeData(timeData));
+}
+
+function drawFrequency(frequencyData) {
+  // get the frequency data into frequencyData array
+  analyzer.getByteFrequencyData(frequencyData);
+  // console.log(frequencyData);
+  // figure out bar visual length. Multiply by 2.5 to push out nonaudible high freqs
+  const barWidth = (WIDTH / bufferLength) * 2.5;
+  let x = 0;
+  frequencyData.forEach(amount => {
+    // frequency data comes in from 0 to 255
+    const percent = amount / 255;
+    const barHeight = HEIGHT * percent;
+    // convert bar colors to HSL
+    const [h, s, l] = [360 / (percent * 360) - 1.9, 0.5, 0.5];
+    const [r, g, b] = hslToRgb(h, s, l);
+    ctx.fillStyle = `rgb(${r},${g},${b})`;
+    // re: 2nd argument below - no way to tell it to anchor from bottom
+    ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
+
+    x += barWidth + 1;
+  });
+
+  requestAnimationFrame(() => drawFrequency(frequencyData));
 }
 
 getAudio();
